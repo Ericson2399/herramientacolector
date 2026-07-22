@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Solicitud Colector + Supervisoras</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #f4f6f8;
+    padding: 30px;
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.contenedor {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* ===== COLECTOR ===== */
+.card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 450px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.card h2 {
+    text-align: center;
+}
+
+label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.money {
+    display: flex;
+    align-items: center;
+}
+.money span {
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+textarea {
+    height: 150px;
+    resize: none;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+.buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+}
+.clear {
+    background: #e0e0e0;
+}
+
+/* ===== SUPERVISORAS ===== */
+#supervisoras {
+    flex: 1;
+    max-width: 500px;
+}
+
+#supervisoras h1 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#supervisoras input {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.resultado {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.lugar {
+    font-weight: bold;
+    font-size: 17px;
+}
+.supervisora {
+    color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<!-- ===== SOLICITUD COLECTOR (IZQUIERDA) ===== -->
+<div class="card">
+<h2>Solicitud Colector</h2>
+
+<label>Solicitud Realizada</label>
+<input id="solicitante" oninput="generarTexto()">
+
+<label>Código</label>
+<input id="codigo" oninput="generarTexto()">
+
+<label>Monto</label>
+<div class="money">
+<span>RD$</span>
+<input type="number" id="monto" oninput="generarTexto()">
+</div>
+
+<label>Disponibilidad</label>
+<input id="disponibilidad" oninput="generarTexto()">
+
+<label>Dirección</label>
+<input id="direccion" oninput="generarTexto()">
+
+<label>Fecha Visita</label>
+<input type="date" id="fecha" oninput="generarTexto()">
+
+<label>Teléfono</label>
+<input id="telefono" oninput="generarTexto()">
+
+<textarea id="resultado" readonly></textarea>
+
+<div class="buttons">
+<button class="copy" onclick="copiarTexto()">Copiar</button>
+<button class="clear" onclick="limpiar()">Limpiar</button>
+</div>
+</div>
+
+<!-- ===== BUSCADOR SUPERVISORAS (ARRIBA DERECHA) ===== -->
+<div id="supervisoras">
+<h1>🔍 Supervisoras</h1>
+<input type="text" id="busqueda" placeholder="Escribe el nombre del lugar...">
+<div id="resultados"></div>
+</div>
+
+</div>
+
+<script>
+/* ===== COLECTOR ===== */
+function generarTexto() {
+    const f = fecha.value ? fecha.value.split("-") : [];
+    const fechaTexto = f.length ? `${f[2]}-${f[1]}-${f[0]}` : "";
+
+    resultado.value =
+`Solicitud Realizada:${solicitante.value}
+Código:${codigo.value}
+Monto:${monto.value ? 'RD$'+monto.value : ''}
+Disponibilidad:${disponibilidad.value}
+Dirección:${direccion.value}
+Fecha Visita:${fechaTexto}
+Teléfono:${telefono.value}`;
+}
+
+function copiarTexto() {
+    resultado.select();
+    document.execCommand("copy");
+    alert("Texto copiado ✔");
+}
+
+function limpiar() {
+    document.querySelectorAll(".card input, .card textarea").forEach(e => e.value = "");
+}
+
+/* ===== SUPERVISORAS ===== */
+const datos = [
+    { lugar: "CAROLINA DEL NORTE", supervisora: "Alexandra Arias" },
+    { lugar: "ENRRIQUILLO", supervisora: "Alexandra Arias" },
+    { lugar: "LAS MARIAS", supervisora: "Alexandra Arias" },
+    { lugar: "LOS POMOS", supervisora: "Alexandra Arias" },
+    { lugar: "PALMARITO", supervisora: "Alexandra Arias" },
+    { lugar: "PRADOS DEL ESTE", supervisora: "Alexandra Arias" },
+    { lugar: "PRADOS DEL NORTE", supervisora: "Alexandra Arias" },
+    { lugar: "REPARTO PEPITO GARCIA", supervisora: "Alexandra Arias" },
+    { lugar: "RESIDENCIAL EL DORADO", supervisora: "Alexandra Arias" },
+    { lugar: "RESIDENCIAL GLORIA", supervisora: "Alexandra Arias" },
+    { lugar: "SANTA MARIA", supervisora: "Alexandra Arias" },
+    { lugar: "VILLA LORA", supervisora: "Alexandra Arias" },
+
+    { lugar: "ARBOLEDA V", supervisora: "Lizamar Cruz" },
+    { lugar: "BARRIO X", supervisora: "Lizamar Cruz" },
+    { lugar: "DON BOSCO", supervisora: "Lizamar Cruz" },
+    { lugar: "EL CAMPITO", supervisora: "Lizamar Cruz" },
+    { lugar: "EL ROBLE", supervisora: "Lizamar Cruz" },
+    { lugar: "EL VEDADO", supervisora: "Lizamar Cruz" },
+    { lugar: "EL VEDADO II", supervisora: "Lizamar Cruz" },
+    { lugar: "GALINDO", supervisora: "Lizamar Cruz" },
+    { lugar: "GAMUNDI", supervisora: "Lizamar Cruz" },
+    { lugar: "LA ARBOLEDA", supervisora: "Lizamar Cruz" },
+    { lugar: "LA ARBOLEDA II.", supervisora: "Lizamar Cruz" },
+    { lugar: "LA ARBOLEDA III", supervisora: "Lizamar Cruz" },
+    { lugar: "LA ARBOLEDA IV", supervisora: "Lizamar Cruz" },
+    { lugar: "LA ARBOLEDA V", supervisora: "Lizamar Cruz" },
+    { lugar: "LA CIGUA", supervisora: "Lizamar Cruz" },
+    { lugar: "LA ENRRAMADA", supervisora: "Lizamar Cruz" },
+    { lugar: "LAS CAROLINAS", supervisora: "Lizamar Cruz" },
+    { lugar: "LOS ROBLES", supervisora: "Lizamar Cruz" },
+    { lugar: "PUERTO RICO", supervisora: "Lizamar Cruz" },
+    { lugar: "RANCHO CHICO", supervisora: "Lizamar Cruz" },
+    { lugar: "RESIDENCIAL DON PERSIO", supervisora: "Lizamar Cruz" },
+    { lugar: "RESIDENCIAL DON PERCIO 2", supervisora: "Lizamar Cruz" },
+    { lugar: "VILLA ESPERANZA", supervisora: "Lizamar Cruz" },
+    { lugar: "VILLA FRESCA", supervisora: "Lizamar Cruz" },
+    { lugar: "VILLA MARGARITA", supervisora: "Lizamar Cruz" },
+
+    { lugar: "AMADA I", supervisora: "Gladys Paulino" },
+    { lugar: "CAMAGUEY", supervisora: "Gladys Paulino" },
+    { lugar: "DON DAMIAN", supervisora: "Gladys Paulino" },
+    { lugar: "DON PEDRO", supervisora: "Gladys Paulino" },
+    { lugar: "EL ENSUEÑO", supervisora: "Gladys Paulino" },
+    { lugar: "EL PINITO DE PONTON", supervisora: "Gladys Paulino" },
+    { lugar: "EL PINITO SABANETA", supervisora: "Gladys Paulino" },
+    { lugar: "EL PORTAL PONTON LA VEGA", supervisora: "Gladys Paulino" },
+    { lugar: "Jeremias", supervisora: "Gladys Paulino" },
+    { lugar: "LA SABANA DE PONTON", supervisora: "Gladys Paulino" },
+    { lugar: "LAS MARAS", supervisora: "Gladys Paulino" },
+    { lugar: "LOTIFICACION LAS PRADERAS PONTON", supervisora: "Gladys Paulino" },
+    { lugar: "PEDRO A. RIVERA", supervisora: "Gladys Paulino" },
+    { lugar: "PONTON", supervisora: "Gladys Paulino" },
+    { lugar: "RESIDENCIAL EL CORAL", supervisora: "Gladys Paulino" },
+    { lugar: "RESIDENCIAL EL PORTAL 3", supervisora: "Gladys Paulino" },
+    { lugar: "RESIDENCIAL LA QUINTA", supervisora: "Gladys Paulino" },
+    { lugar: "RESIDENCIAL MOLINO DE PONTON", supervisora: "Gladys Paulino" },
+
+    { lugar: "CENTRO DE LA CIUDAD", supervisora: "Digna Solis" },
+    { lugar: "CIUDAD OLIMPICA", supervisora: "Digna Solis" },
+    { lugar: "CIUDAD UNIVERSITARIA", supervisora: "Digna Solis" },
+    { lugar: "DON ZOILO", supervisora: "Digna Solis" },
+    { lugar: "EL HIGUERO", supervisora: "Digna Solis" },
+    { lugar: "JARDINES UNIVERSITARIOS", supervisora: "Digna Solis" },
+    { lugar: "LA RIVIERA", supervisora: "Digna Solis" },
+    { lugar: "NAPOLES", supervisora: "Digna Solis" },
+    { lugar: "PARQUE HOSTOS", supervisora: "Digna Solis" },
+    { lugar: "QUINTO PATIO", supervisora: "Digna Solis" },
+    { lugar: "SAN ANDRÉS", supervisora: "Digna Solis" },
+    { lugar: "SAN ANTONIO", supervisora: "Digna Solis" },
+    { lugar: "SAN MARTIN", supervisora: "Digna Solis" },
+    { lugar: "SAN MIGUEL", supervisora: "Digna Solis" },
+    { lugar: "DON ANTONIO", supervisora: "Digna Solis" },
+    { lugar: "VILLA CAROLINA", supervisora: "Digna Solis" },
+    { lugar: "VILLA HOLGUIN", supervisora: "Digna Solis" },
+    { lugar: "VILLA MERA", supervisora: "Digna Solis" },
+    { lugar: "VILLA REAL", supervisora: "Digna Solis" },
+    { lugar: "ZAFARRAYA", supervisora: "Digna Solis" },
+
+    { lugar: "ALTOS DE CHAVON", supervisora: "Cheyla Goris" },
+    { lugar: "BARRANCONES", supervisora: "Cheyla Goris" },
+    { lugar: "BOCA DEL LOBO", supervisora: "Cheyla Goris" },
+    { lugar: "BRACHE BATISTA", supervisora: "Cheyla Goris" },
+    { lugar: "CAMBOYA", supervisora: "Cheyla Goris" },
+    { lugar: "CONANI", supervisora: "Cheyla Goris" },
+    { lugar: "EL TANQUE", supervisora: "Cheyla Goris" },
+    { lugar: "LAS CARMELITAS I", supervisora: "Cheyla Goris" },
+    { lugar: "LAS CARMELITAS II", supervisora: "Cheyla Goris" },
+    { lugar: "LOS BARRANCONES", supervisora: "Cheyla Goris" },
+    { lugar: "MARIA AUXILIADORA", supervisora: "Cheyla Goris" },
+    { lugar: "MARIA TRINIDAD SANCHEZ", supervisora: "Cheyla Goris" },
+    { lugar: "NIBAJE", supervisora: "Cheyla Goris" },
+    { lugar: "RESIDENCIAL ARMIDA", supervisora: "Cheyla Goris" },
+    { lugar: "VILLA OLGA", supervisora: "Cheyla Goris" },
+    { lugar: "VILLA PARAISO", supervisora: "Cheyla Goris" },
+    { lugar: "VILLA ROSA", supervisora: "Cheyla Goris" },
+
+    { lugar: "BARRIO LOS PERDOMOS", supervisora: "Marianni Acevedo" },
+    { lugar: "DON FAUSTO", supervisora: "Marianni Acevedo" },
+    { lugar: "DON JOAQUIN", supervisora: "Marianni Acevedo" },
+    { lugar: "FUNDACION PANAL", supervisora: "Marianni Acevedo" },
+    { lugar: "HATICO", supervisora: "Marianni Acevedo" },
+    { lugar: "INCO", supervisora: "Marianni Acevedo" },
+    { lugar: "LA LAGUNA", supervisora: "Marianni Acevedo" },
+    { lugar: "LA LOTERIA", supervisora: "Marianni Acevedo" },
+    { lugar: "LOS MULTI 1", supervisora: "Marianni Acevedo" },
+    { lugar: "LOS MULTI 2", supervisora: "Marianni Acevedo" },
+    { lugar: "RESIDENCIAL ANA MAGALIS", supervisora: "Marianni Acevedo" },
+    { lugar: "RESIDENCIAL DON FAUSTO", supervisora: "Marianni Acevedo" },
+    { lugar: "RESIDENCIAL HAMACA", supervisora: "Marianni Acevedo" },
+    { lugar: "RESIDENCIAL MARIA ESTELA", supervisora: "Marianni Acevedo" },
+    { lugar: "URBANIZACIÓN DESPRADE", supervisora: "Marianni Acevedo" },
+    { lugar: "URBANIZACION OMELIA", supervisora: "Marianni Acevedo" },
+    { lugar: "VILLA FRANCISCA I", supervisora: "Marianni Acevedo" },
+    { lugar: "VILLA FRANCISCA II", supervisora: "Marianni Acevedo" },
+    { lugar: "VILLA PRIMAVERA I", supervisora: "Marianni Acevedo" },
+    { lugar: "VILLA PRIMAVERA II", supervisora: "Marianni Acevedo" }
+];
+
+busqueda.addEventListener("input", () => {
+    resultados.innerHTML = "";
+    const texto = busqueda.value.toLowerCase();
+    if (!texto) return;
+
+    datos.filter(d => d.lugar.toLowerCase().includes(texto))
+         .forEach(d => {
+            resultados.innerHTML += `
+            <div class="resultado">
+                <div class="lugar">${d.lugar}</div>
+                <div class="supervisora">Supervisora: ${d.supervisora}</div>
+            </div>`;
+         });
+});
+</script>
+
+</body>
+</html>
